@@ -85,8 +85,10 @@ const Navbar = () => {
                             {isAuthenticated && (
                                 <Fragment>
                                     <div className="text-center">
-                                        <h2 className="capitalize text-xl font-semibold">Hi, {user.name}</h2>
-                                        <span>Email: {user.email}</span>
+                                    <h2 className="capitalize text-xl font-semibold">
+                                       Hi, {user?.name || "Guest"}
+                                    </h2>
+                                    <span>Email: {user?.email || "Not provided"}</span>
                                     </div>
                                     <button onClick={accountHandler} className="bg-red-400 hover:bg-red-500 py-2 rounded-lg w-48 text-center text-neutral-50  transition duration-200 font-semibold">Account</button>
                                     <button onClick={logoutHandler} className=" border-red-400 text-red-400 hover:text-red-500 hover:border-red-500 hover:bg-red-200 border-solid border py-2 rounded-lg w-48 text-center transition duration-200 box-border">Log out</button>

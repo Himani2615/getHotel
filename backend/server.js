@@ -1,6 +1,9 @@
 const app = require('./app');
 const databaseConnect = require('./config/database');
 const cloudinary = require('cloudinary').v2;
+require('dotenv').config();
+console.log("Environment Variables:", process.env);
+
 
 const port = process.env.PORT;
 
