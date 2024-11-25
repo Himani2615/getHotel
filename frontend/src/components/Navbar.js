@@ -82,7 +82,7 @@ const Navbar = () => {
                                     <button onClick={signupHandler} className=" border-red-400 text-red-400 hover:text-red-500 hover:border-red-500 hover:bg-red-200 border-solid border py-2 rounded-lg w-48 text-center transition duration-200 box-border">Sign Up</button>
                                 </Fragment>
                             )}
-                            {isAuthenticated && (
+                            {isAuthenticated && user?.name && (
                                 <Fragment>
                                     <div className="text-center">
                                     <h2 className="capitalize text-xl font-semibold">
