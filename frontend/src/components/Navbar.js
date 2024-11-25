@@ -55,7 +55,9 @@ const Navbar = () => {
                         <span className="md:hidden">
                             <AccountCircleIcon className="text-red-400 cursor-pointer" />
                         </span>
-                        <span className="capitalize text-red-400 font-medium hidden md:block cursor-pointer">{isAuthenticated ? user.name : "Sign in"}</span>
+                        <span className="capitalize text-red-400 font-medium hidden md:block cursor-pointer">
+                        {isAuthenticated && user?.name ? user.name : "Sign in"}
+</span>
                     </div>
 
                     <Popover

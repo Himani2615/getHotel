@@ -8,7 +8,7 @@
         "dev": "nodemon backend/server.js",
         "production": "npm install --prefix frontend && npm run build --prefix frontend"
     },
-    "author": "Tushar Biswas",
+    "author": "Himani Singh",
     "license": "ISC",
     "dependencies": {
         "bcryptjs": "^2.4.3",
