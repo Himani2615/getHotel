@@ -2,6 +2,8 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const path = require("path");
 
+const cors = require("cors");
+
 const app = express();
 
 // config
@@ -21,15 +23,10 @@ app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 app.use(cookieParser());
 
 // cors cofiguration
-if (process.env.NODE_ENV !== "PRODUCTION") {
-	app.use(
-		require("cors")({
-			origin: process.env.FRONTEND_URL,
-			optionsSuccessStatus: 200,
-			credentials: true,
-		})
-	);
-}
+app.use(cors({
+    origin: process.env.FRONTEND_URL,
+    credentials: true 
+}));
 
 app.use("/api/v1", userRoute);
 app.use("/api/v1", hotelRoute);

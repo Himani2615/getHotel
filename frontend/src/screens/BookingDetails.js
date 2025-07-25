@@ -71,7 +71,7 @@ const BookingDetails = () => {
                                         </div>
                                         <div className="ml-8 flex mb-4">
                                             <span className="font-medium inline-block w-28">Price(per day):</span>
-                                            <span className="font-mono">{booking?.room.pricePerDay} taka</span>
+                                            <span className="font-mono">{booking?.room.pricePerDay} INR</span>
                                         </div>
                                     </div>
                                 </div>
@@ -92,15 +92,15 @@ const BookingDetails = () => {
                                         </div>
                                         <div className="ml-8 flex mb-4">
                                             <span className="font-medium inline-block  w-28">Price({dates?.length}):</span>
-                                            <span className="font-mono">{prices} taka</span>
+                                            <span className="font-mono">{prices} INR</span>
                                         </div>
                                         <div className="ml-8 flex mb-4">
                                             <span className="font-medium inline-block  w-28">Vat:</span>
-                                            <span className="font-mono">{vat} taka</span>
+                                            <span className="font-mono">{vat} INR</span>
                                         </div>
                                         <div className="ml-8 flex mb-4">
                                             <span className="font-medium inline-block w-28">Total Price:</span>
-                                            <span className="font-mono">{booking?.totalPrice} taka</span>
+                                            <span className="font-mono">{booking?.totalPrice} INR</span>
                                         </div>
                                         <div className="ml-8 flex mb-4">
                                             <span className="font-medium inline-block w-28"> Paid:</span>

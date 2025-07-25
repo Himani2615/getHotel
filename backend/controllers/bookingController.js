@@ -193,7 +193,7 @@ exports.sendStripeSecretKey = catchAsyncErrors(async (req, res, next) => {
         amount: (req.body.amount * 100),
         currency: 'bdt',
         metadata: {
-            company: 'Spothotel'
+            company: 'Gethotel'
         }
     });
 
