@@ -63,7 +63,7 @@ Create `backend/config/config.env`. This file is intentionally ignored by Git; d
 ```dotenv
 PORT=5000
 NODE_ENV=development
-DB_URI=mongodb://127.0.0.1:27017/gethotel
+DB_URI= your_db_uri
 JWT_SECRET=replace-with-a-long-random-secret
 JWT_EXPIRE=7d
 COOKIE_EXPIRE=7
