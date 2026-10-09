@@ -7,13 +7,14 @@ import {
 } from "../slices/userSlice";
 import { setError } from "../slices/appSlice";
 import axios from "axios";
+import { API_URL, getErrorMessage } from "../../utils/api";
 
 // sign up user
 export const signUpAction = (formData) => async (dispatch) => {
 	try {
 		dispatch(setLoader(true));
 		const { data } = await axios.post(
-			process.env.REACT_APP_API_URL + "/api/v1/user/new",
+			API_URL + "/api/v1/user/new",
 			formData,
 			{
 				headers: { "Content-Type": "application/json" },
@@ -25,7 +26,7 @@ export const signUpAction = (formData) => async (dispatch) => {
 		dispatch(setLoader(false));
 	} catch (err) {
 		dispatch(setLoader(false));
-		dispatch(setError(err.response.data.message));
+		dispatch(setError(getErrorMessage(err)));
 	}
 };
 
@@ -34,7 +35,7 @@ export const signInAction = (formData) => async (dispatch) => {
 	try {
 		dispatch(setLoader(true));
 		const { data } = await axios.post(
-			process.env.REACT_APP_API_URL + "/api/v1/login",
+			API_URL + "/api/v1/login",
 			formData,
 			{
 				headers: { "Content-Type": "application/json" },
@@ -46,7 +47,7 @@ export const signInAction = (formData) => async (dispatch) => {
 		dispatch(setLoader(false));
 	} catch (err) {
 		dispatch(setLoader(false));
-		dispatch(setError(err.response.data.message));
+		dispatch(setError(getErrorMessage(err)));
 	}
 };
 
@@ -55,7 +56,7 @@ export const getUserAction = () => async (dispatch) => {
 	try {
 		dispatch(setLoader(true));
 		const { data } = await axios.get(
-			process.env.REACT_APP_API_URL + "/api/v1/me",
+			API_URL + "/api/v1/me",
 			{ withCredentials: true }
 		);
 
@@ -70,7 +71,7 @@ export const getUserAction = () => async (dispatch) => {
 export const logoutAction = () => async (dispatch) => {
 	try {
 		dispatch(setLoader(true));
-		await axios.get(process.env.REACT_APP_API_URL + "/api/v1/logout", {
+		await axios.get(API_URL + "/api/v1/logout", {
 			withCredentials: true,
 		});
 
@@ -78,7 +79,7 @@ export const logoutAction = () => async (dispatch) => {
 		dispatch(setLoader(false));
 	} catch (err) {
 		dispatch(setLoader(false));
-		dispatch(setError(err.response.data.message));
+		dispatch(setError(getErrorMessage(err)));
 	}
 };
 
@@ -86,7 +87,7 @@ export const logoutAction = () => async (dispatch) => {
 export const updateUserAction = (formData) => async (dispatch) => {
 	try {
 		const { data } = await axios.put(
-			process.env.REACT_APP_API_URL + "/api/v1/me",
+			API_URL + "/api/v1/me",
 			formData,
 			{
 				headers: { "Content-Type": "application/json" },
@@ -96,7 +97,7 @@ export const updateUserAction = (formData) => async (dispatch) => {
 
 		dispatch(setUser(data.user));
 	} catch (err) {
-		dispatch(setError(err.response.data.message));
+		dispatch(setError(getErrorMessage(err)));
 	}
 };
 
@@ -104,7 +105,7 @@ export const updateUserAction = (formData) => async (dispatch) => {
 export const changePasswordAction = (formData) => async (dispatch) => {
 	try {
 		const { data } = await axios.put(
-			process.env.REACT_APP_API_URL + "/api/v1/me/password",
+			API_URL + "/api/v1/me/password",
 			formData,
 			{
 				headers: { "Content-Type": "application/json" },
@@ -114,7 +115,7 @@ export const changePasswordAction = (formData) => async (dispatch) => {
 
 		dispatch(setUser(data.user));
 	} catch (err) {
-		dispatch(setError(err.response.data.message));
+		dispatch(setError(getErrorMessage(err)));
 	}
 };
 
@@ -122,14 +123,14 @@ export const changePasswordAction = (formData) => async (dispatch) => {
 export const deleteUserAction = () => async (dispatch) => {
 	try {
 		dispatch(setLoader(true));
-		await axios.delete(process.env.REACT_APP_API_URL + "/api/v1/me", {
+		await axios.delete(API_URL + "/api/v1/me", {
 			withCredentials: true,
 		});
 
 		dispatch(logoutUser());
 		dispatch(setLoader(false));
 	} catch (err) {
-		dispatch(setError(err.response.data.message));
+		dispatch(setError(getErrorMessage(err)));
 		dispatch(setLoader(false));
 	}
 };
@@ -139,14 +140,14 @@ export const getAllUsers = () => async (dispatch) => {
 	try {
 		dispatch(setUsersLoader(true));
 		const { data } = await axios.get(
-			process.env.REACT_APP_API_URL + "/api/v1/admin/users",
+			API_URL + "/api/v1/admin/users",
 			{ withCredentials: true }
 		);
 
 		dispatch(setAllUsers(data.users));
 		dispatch(setUsersLoader(false));
 	} catch (err) {
-		dispatch(setError(err.response.data.message));
+		dispatch(setError(getErrorMessage(err)));
 		dispatch(setUsersLoader(false));
 	}
 };
@@ -155,7 +156,7 @@ export const getAllUsers = () => async (dispatch) => {
 export const updateUserRole = (id, role) => async (dispatch) => {
 	try {
 		const { data } = await axios.put(
-			process.env.REACT_APP_API_URL + `/api/v1/admin/user/${id}`,
+			API_URL + `/api/v1/admin/user/${id}`,
 			{ role },
 			{
 				headers: { "Content-Type": "application/json" },
@@ -165,6 +166,6 @@ export const updateUserRole = (id, role) => async (dispatch) => {
 
 		dispatch(setAllUsers(data.users));
 	} catch (err) {
-		dispatch(setError(err.response.data.message));
+		dispatch(setError(getErrorMessage(err)));
 	}
 };

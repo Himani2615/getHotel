@@ -16,6 +16,7 @@ import {
 } from "@stripe/react-stripe-js";
 import { setHasBooked } from '../redux/slices/hotelSlice';
 import Meta from '../utils/Meta';
+import { API_URL, getErrorMessage } from '../utils/api';
 
 const Payment = () => {
     const payBtn = useRef();
@@ -44,7 +45,7 @@ const Payment = () => {
         payBtn.current.disabled = true;
 
         try {
-            const { data } = await axios.post('/api/v1/stripeclientkey', { amount: bookingDetails.totalPrice }, { headers: { "Content-Type": "application/json" } })
+            const { data } = await axios.post(API_URL + '/api/v1/stripeclientkey', { amount: bookingDetails.totalPrice }, { headers: { "Content-Type": "application/json" }, withCredentials: true })
             const client_secret = data.client_secret;
 
             if (!stripe || !elements) return;
@@ -84,7 +85,7 @@ const Payment = () => {
 
         } catch (err) {
             payBtn.current.disabled = false;
-            dispatch(setError(err.response.data.message));
+            dispatch(setError(getErrorMessage(err)));
         }
 
     }

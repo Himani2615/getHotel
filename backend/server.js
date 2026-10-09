@@ -1,14 +1,7 @@
+require('dotenv').config({ path: require('path').resolve(__dirname, 'config/config.env') });
 const app = require('./app');
 const databaseConnect = require('./config/database');
 const cloudinary = require('cloudinary').v2;
-require('dotenv').config();
-console.log("Environment Variables:", process.env);
-
-
-const port = process.env.PORT;
-
-// database connect
-databaseConnect();
 
 // cloudinary
 cloudinary.config({
@@ -17,6 +10,20 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 })
 
-app.listen(port, () => {
-    console.log(`Server started at port:${port}`);
-})
+const port = process.env.PORT || 5000;
+
+const startServer = async () => {
+   try {
+       const data = await databaseConnect();
+       console.log(`Database connected to ${data.connection.host}`);
+
+       app.listen(port, () => {
+           console.log(`Server started at port:${port}`);
+       });
+   } catch (error) {
+       console.error(`Database connection failed: ${error.message}`);
+       process.exitCode = 1;
+   }
+};
+
+startServer();

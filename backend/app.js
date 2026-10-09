@@ -1,15 +1,19 @@
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const path = require("path");
+const fs = require("fs");
 
 const cors = require("cors");
 
 const app = express();
 
 // config
-if (process.env.NODE_ENV !== "PRODUCTION") {
-	require("dotenv").config({ path: "backend/config/config.env" });
+if (process.env.NODE_ENV !== "production") {
+	require("dotenv").config({ path: path.resolve(__dirname, "config/config.env") });
 }
+
+const dns = require('node:dns/promises');
+dns.setServers(['1.1.1.1', '8.8.8.8']);
 
 // Routes import
 const userRoute = require("./routes/userRoute");
@@ -23,10 +27,26 @@ app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 app.use(cookieParser());
 
 // cors cofiguration
+const allowedOrigins = (process.env.FRONTEND_URL || "http://localhost:3000")
+	.split(",")
+	.map((origin) => origin.trim())
+	.map((origin) => origin.replace(/\/$/, ""))
+	.filter(Boolean);
+
 app.use(cors({
-    origin: process.env.FRONTEND_URL,
-    credentials: true 
+	origin: (origin, callback) => {
+		if (!origin || allowedOrigins.includes(origin.replace(/\/$/, ""))) {
+			return callback(null, true);
+		}
+
+		return callback(new Error("Origin is not allowed by CORS"));
+	},
+	credentials: true
 }));
+
+app.get("/api/v1/health", (req, res) => {
+	res.status(200).json({ success: true, database: "connected" });
+});
 
 app.use("/api/v1", userRoute);
 app.use("/api/v1", hotelRoute);
@@ -34,11 +54,16 @@ app.use("/api/v1", roomRoute);
 app.use("/api/v1", bookingRoute);
 
 // production build
-if (process.env.NODE_ENV === "PRODUCTION") {
-	app.use(express.static(path.join(__dirname + "./../frontend/build")));
+const frontendBuildPath = path.join(__dirname, "../frontend/build");
+if (process.env.NODE_ENV === "production" && fs.existsSync(frontendBuildPath)) {
+	app.use(express.static(frontendBuildPath));
 
 	app.get("*", (req, res) => {
-		res.sendFile(path.resolve(__dirname, "./../frontend/build/index.html"));
+		res.sendFile(path.join(frontendBuildPath, "index.html"));
+	});
+} else {
+	app.get("/", (req, res) => {
+		res.status(200).json({ success: true, message: "GetHotel API is running" });
 	});
 }
 

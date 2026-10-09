@@ -32,6 +32,7 @@ import UpdateRoom from "./screens/UpdateRoom";
 import SingleBookingDetails from "./screens/SingleBookingDetails";
 import NotFound from "./screens/NotFound";
 import { HelmetProvider } from "react-helmet-async";
+import { API_URL, getErrorMessage } from "./utils/api";
 
 const App = () => {
 	const [stripeApiKey, setStripeApiKey] = useState("");
@@ -57,13 +58,13 @@ const App = () => {
 				try {
 					setStripeLoading(true);
 					const { data } = await axios.get(
-						process.env.REACT_APP_API_URL + "/api/v1/stripeapikey",
+						API_URL + "/api/v1/stripeapikey",
 						{ withCredentials: true }
 					);
 					setStripeApiKey(data.stripeApiKey);
 					setStripeLoading(false);
 				} catch (err) {
-					dispatch(setError(err.response.data.message));
+					dispatch(setError(getErrorMessage(err)));
 					setStripeLoading(false);
 				}
 			};

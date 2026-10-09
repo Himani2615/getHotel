@@ -16,6 +16,7 @@ import {
 	setAllBookings,
 } from "../slices/hotelSlice";
 import axios from "axios";
+import { API_URL, getErrorMessage } from "../../utils/api";
 
 // search hotel
 export const searchHotelsAction =
@@ -25,7 +26,7 @@ export const searchHotelsAction =
 			dispatch(setHasSearched(true));
 			dispatch(setLoader(true));
 			const { data } = await axios.get(
-				process.env.REACT_APP_API_URL +
+				API_URL +
 					`/api/v1/hotels?location=${location}&person=${person}&room=${room}&d1=${d1}&d2=${d2}`,
 				{ withCredentials: true }
 			);
@@ -34,7 +35,7 @@ export const searchHotelsAction =
 			dispatch(setLoader(false));
 		} catch (err) {
 			dispatch(setLoader(false));
-			dispatch(setError(err.response.data.message));
+			dispatch(setError(getErrorMessage(err)));
 		}
 	};
 
@@ -44,7 +45,7 @@ export const getFeturedHotels = () => async (dispatch) => {
 		dispatch(setHasSearched(false));
 		dispatch(setLoader(true));
 		const { data } = await axios.get(
-			process.env.REACT_APP_API_URL + `/api/v1/hotels`,
+			API_URL + `/api/v1/hotels`,
 			{ withCredentials: true }
 		);
 
@@ -53,7 +54,7 @@ export const getFeturedHotels = () => async (dispatch) => {
 	} catch (err) {
 		console.log(err);
 		dispatch(setLoader(false));
-		dispatch(setError(err.response.data.message));
+		dispatch(setError(getErrorMessage(err)));
 	}
 };
 
@@ -62,7 +63,7 @@ export const getHotelAction = (id) => async (dispatch) => {
 	try {
 		dispatch(setLoader(true));
 		const { data } = await axios.get(
-			process.env.REACT_APP_API_URL + `/api/v1/hotel/${id}`,
+			API_URL + `/api/v1/hotel/${id}`,
 			{ withCredentials: true }
 		);
 
@@ -70,7 +71,7 @@ export const getHotelAction = (id) => async (dispatch) => {
 		dispatch(setLoader(false));
 	} catch (err) {
 		dispatch(setLoader(false));
-		dispatch(setError(err.response.data.message));
+		dispatch(setError(getErrorMessage(err)));
 	}
 };
 
@@ -79,14 +80,14 @@ export const getRoomAction = (id) => async (dispatch) => {
 	try {
 		dispatch(setLoader(true));
 		const { data } = await axios.get(
-			process.env.REACT_APP_API_URL + `/api/v1/room/${id}`,
+			API_URL + `/api/v1/room/${id}`,
 			{ withCredentials: true }
 		);
 		dispatch(setRoom(data.room));
 		dispatch(setLoader(false));
 	} catch (err) {
 		dispatch(setLoader(false));
-		dispatch(setError(err.response.data.message));
+		dispatch(setError(getErrorMessage(err)));
 	}
 };
 
@@ -95,7 +96,7 @@ export const newBookingAction =
 	(formData, hotelId, roomId) => async (dispatch) => {
 		try {
 			await axios.post(
-				process.env.REACT_APP_API_URL +
+				API_URL +
 					`/api/v1/hotel/${hotelId}/${roomId}/book`,
 				formData,
 				{ headers: { "Content-Type": "application/json" }, withCredentials: true }
@@ -103,7 +104,7 @@ export const newBookingAction =
 
 			dispatch(setHasBooked(true));
 		} catch (err) {
-			dispatch(setError(err.response.data.message));
+			dispatch(setError(getErrorMessage(err)));
 		}
 	};
 
@@ -112,14 +113,14 @@ export const getUsersBookings = () => async (dispatch) => {
 	try {
 		dispatch(setLoader(true));
 		const { data } = await axios.get(
-			process.env.REACT_APP_API_URL + "/api/v1/me/bookings",
+			API_URL + "/api/v1/me/bookings",
 			{ withCredentials: true }
 		);
 
 		dispatch(setBookings(data.bookings));
 		dispatch(setLoader(false));
 	} catch (err) {
-		dispatch(setError(err.response.data.message));
+		dispatch(setError(getErrorMessage(err)));
 		dispatch(setLoader(false));
 	}
 };
@@ -129,14 +130,14 @@ export const getUserBooking = (id) => async (dispatch) => {
 	try {
 		dispatch(setLoader(true));
 		const { data } = await axios.get(
-			process.env.REACT_APP_API_URL + `/api/v1/me/booking/${id}`,
+			API_URL + `/api/v1/me/booking/${id}`,
 			{ withCredentials: true }
 		);
 
 		dispatch(setBooking(data.booking));
 		dispatch(setLoader(false));
 	} catch (err) {
-		dispatch(setError(err.response.data.message));
+		dispatch(setError(getErrorMessage(err)));
 		dispatch(setLoader(false));
 	}
 };
@@ -146,7 +147,7 @@ export const getAllHotels = () => async (dispatch) => {
 	try {
 		dispatch(setLoader(true));
 		const { data } = await axios.get(
-			process.env.REACT_APP_API_URL + `/api/v1/hotels`,
+			API_URL + `/api/v1/hotels`,
 			{ withCredentials: true }
 		);
 
@@ -154,7 +155,7 @@ export const getAllHotels = () => async (dispatch) => {
 		dispatch(setLoader(false));
 	} catch (err) {
 		dispatch(setLoader(false));
-		dispatch(setError(err.response.data.message));
+		dispatch(setError(getErrorMessage(err)));
 	}
 };
 
@@ -163,7 +164,7 @@ export const uploadHotelPicture = (formData, id) => async (dispatch) => {
 	try {
 		dispatch(setLoader(true));
 		await axios.put(
-			process.env.REACT_APP_API_URL + `/api/v1/hotel/${id}/images`,
+			API_URL + `/api/v1/hotel/${id}/images`,
 			formData,
 			{ headers: { "Content-Type": "multipart/form-data" } , withCredentials: true}
 		);
@@ -172,7 +173,7 @@ export const uploadHotelPicture = (formData, id) => async (dispatch) => {
 		dispatch(setHasSearched(false));
 		dispatch(setLoader(false));
 	} catch (err) {
-		dispatch(setError(err.response.data.message));
+		dispatch(setError(getErrorMessage(err)));
 		dispatch(setLoader(false));
 	}
 };
@@ -182,7 +183,7 @@ export const uploadRoomPicture = (formData, id) => async (dispatch) => {
 	try {
 		dispatch(setLoader(true));
 		await axios.put(
-			process.env.REACT_APP_API_URL + `/api/v1/room/${id}/images`,
+			API_URL + `/api/v1/room/${id}/images`,
 			formData,
 			{ headers: { "Content-Type": "multipart/form-data" }, withCredentials: true }
 		);
@@ -190,7 +191,7 @@ export const uploadRoomPicture = (formData, id) => async (dispatch) => {
 		dispatch(setSuccess("Image uploaded successfully"));
 		dispatch(setLoader(false));
 	} catch (err) {
-		dispatch(setError(err.response.data.message));
+		dispatch(setError(getErrorMessage(err)));
 		dispatch(setLoader(false));
 	}
 };
@@ -200,7 +201,7 @@ export const deleteHotel = (id) => async (dispatch) => {
 	try {
 		dispatch(setLoader(true));
 		const { data } = await axios.delete(
-			process.env.REACT_APP_API_URL + `/api/v1/hotel/${id}`,
+			API_URL + `/api/v1/hotel/${id}`,
 			{ withCredentials: true }
 		);
 
@@ -208,7 +209,7 @@ export const deleteHotel = (id) => async (dispatch) => {
 		dispatch(setSuccess("Hotel deleted successfully"));
 		dispatch(setLoader(false));
 	} catch (err) {
-		dispatch(setError(err.response.data.message));
+		dispatch(setError(getErrorMessage(err)));
 		dispatch(setLoader(false));
 	}
 };
@@ -218,7 +219,7 @@ export const deleteRoom = (id) => async (dispatch) => {
 	try {
 		dispatch(setLoader(true));
 		const { data } = await axios.delete(
-			process.env.REACT_APP_API_URL + `/api/v1/room/${id}`,
+			API_URL + `/api/v1/room/${id}`,
 			{ withCredentials: true }
 		);
 
@@ -226,7 +227,7 @@ export const deleteRoom = (id) => async (dispatch) => {
 		dispatch(setSuccess("Room deleted successfully"));
 		dispatch(setLoader(false));
 	} catch (err) {
-		dispatch(setError(err.response.data.message));
+		dispatch(setError(getErrorMessage(err)));
 		dispatch(setLoader(false));
 	}
 };
@@ -236,7 +237,7 @@ export const createHotel = (formData) => async (dispatch) => {
 	try {
 		dispatch(setLoader(true));
 		await axios.post(
-			process.env.REACT_APP_API_URL + `/api/v1/hotel/new`,
+			API_URL + `/api/v1/hotel/new`,
 			formData,
 			{ headers: { "Content-Type": "application/json" }, withCredentials: true }
 		);
@@ -244,7 +245,7 @@ export const createHotel = (formData) => async (dispatch) => {
 		dispatch(setSuccess("Hotel Created successfully"));
 		dispatch(setIsHotelCreated(true));
 	} catch (err) {
-		dispatch(setError(err.response.data.message));
+		dispatch(setError(getErrorMessage(err)));
 		dispatch(setLoader(false));
 	}
 };
@@ -254,7 +255,7 @@ export const updateHotel = (formData, hotelId) => async (dispatch) => {
 	try {
 		dispatch(setLoader(true));
 		await axios.put(
-			process.env.REACT_APP_API_URL + `/api/v1/hotel/${hotelId}`,
+			API_URL + `/api/v1/hotel/${hotelId}`,
 			formData,
 			{ headers: { "Content-Type": "application/json" }, withCredentials: true }
 		);
@@ -262,7 +263,7 @@ export const updateHotel = (formData, hotelId) => async (dispatch) => {
 		dispatch(setSuccess("Hotel Updated successfully"));
 		dispatch(setIsHotelUPdated(true));
 	} catch (err) {
-		dispatch(setError(err.response.data.message));
+		dispatch(setError(getErrorMessage(err)));
 		dispatch(setLoader(false));
 	}
 };
@@ -272,7 +273,7 @@ export const createRoom = (formData, hotelId) => async (dispatch) => {
 	try {
 		dispatch(setLoader(true));
 		await axios.post(
-			process.env.REACT_APP_API_URL + `/api/v1/hotel/${hotelId}/room/new`,
+			API_URL + `/api/v1/hotel/${hotelId}/room/new`,
 			formData,
 			{
 				headers: { "Content-Type": "application/json" },
@@ -283,7 +284,7 @@ export const createRoom = (formData, hotelId) => async (dispatch) => {
 		dispatch(setSuccess("Room Created successfully"));
 		dispatch(setIsRoomCreated(true));
 	} catch (err) {
-		dispatch(setError(err.response.data.message));
+		dispatch(setError(getErrorMessage(err)));
 		dispatch(setLoader(false));
 	}
 };
@@ -293,7 +294,7 @@ export const updateRoom = (formData, roomId) => async (dispatch) => {
 	try {
 		dispatch(setLoader(true));
 		await axios.put(
-			process.env.REACT_APP_API_URL + `/api/v1/room/${roomId}`,
+			API_URL + `/api/v1/room/${roomId}`,
 			formData,
 			{
 				headers: { "Content-Type": "application/json" },
@@ -304,7 +305,7 @@ export const updateRoom = (formData, roomId) => async (dispatch) => {
 		dispatch(setSuccess("Room Updated successfully"));
 		dispatch(setIsRoomUpdated(true));
 	} catch (err) {
-		dispatch(setError(err.response.data.message));
+		dispatch(setError(getErrorMessage(err)));
 		dispatch(setLoader(false));
 	}
 };
@@ -314,7 +315,7 @@ export const getAllBookings = () => async (dispatch) => {
 	try {
 		dispatch(setLoader(true));
 		const { data } = await axios.get(
-			process.env.REACT_APP_API_URL + `/api/v1/bookings`,
+			API_URL + `/api/v1/bookings`,
 			{ withCredentials: true }
 		);
 
@@ -322,7 +323,7 @@ export const getAllBookings = () => async (dispatch) => {
 		dispatch(setLoader(false));
 	} catch (err) {
 		dispatch(setLoader(false));
-		dispatch(setError(err.response.data.message));
+		dispatch(setError(getErrorMessage(err)));
 	}
 };
 
@@ -330,7 +331,7 @@ export const getAllBookings = () => async (dispatch) => {
 export const changeBookingStatus = (status, bookingId) => async (dispatch) => {
 	try {
 		const { data } = await axios.put(
-			process.env.REACT_APP_API_URL + `/api/v1/booking/${bookingId}`,
+			API_URL + `/api/v1/booking/${bookingId}`,
 			{ status },
 			{
 				headers: { "Content-Type": "application/json" },
@@ -340,7 +341,7 @@ export const changeBookingStatus = (status, bookingId) => async (dispatch) => {
 
 		dispatch(setAllBookings(data.bookings));
 	} catch (err) {
-		dispatch(setError(err.response.data.message));
+		dispatch(setError(getErrorMessage(err)));
 	}
 };
 
@@ -349,14 +350,14 @@ export const getBookingDetails = (id) => async (dispatch) => {
 	try {
 		dispatch(setLoader(true));
 		const { data } = await axios.get(
-			process.env.REACT_APP_API_URL + `/api/v1/booking/${id}`,
+			API_URL + `/api/v1/booking/${id}`,
 			{ withCredentials: true }
 		);
 
 		dispatch(setBooking(data.booking));
 		dispatch(setLoader(false));
 	} catch (err) {
-		dispatch(setError(err.response.data.message));
+		dispatch(setError(getErrorMessage(err)));
 		dispatch(setLoader(false));
 	}
 };
